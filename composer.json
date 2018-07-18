@@ -3,5 +3,9 @@
   "description": "Absolute/Module/User",
   "type": "package",
   "license": ["MIT", "BSD-3-Clause", "GPL-2.0", "GPL-3.0"],
-  "minimum-stability": "dev"
+  "minimum-stability": "dev",
+  "require": {
+    "absolute.app/core": "^1.0",
+    "absolute.app/auth": "^1.0"
+  }    
 }
