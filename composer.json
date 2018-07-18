@@ -1,14 +1,7 @@
-"repositories": [
-  {
-    "type": "package",
-    "package": {
-      "name": "absolute/module/user",
-      "version": "dev-master",
-      "source": {
-        "url": "git://github.com/marda/absolute-module-user.git",
-        "type": "git",
-        "reference": "master"
-      }
-    }
-  }
-],
+{
+  "name": "absolute/module/user",
+  "description": "Absolute/Module/User",
+  "type": "package",
+  "license": ["MIT", "BSD-3-Clause", "GPL-2.0", "GPL-3.0"],
+  "minimum-stability": "dev"
+}
