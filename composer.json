@@ -1,0 +1,14 @@
+"repositories": [
+  {
+    "type": "package",
+    "package": {
+      "name": "absolute/module/user",
+      "version": "dev-master",
+      "source": {
+        "url": "git://github.com/marda/absolute-module-user.git",
+        "type": "git",
+        "reference": "master"
+      }
+    }
+  }
+],
