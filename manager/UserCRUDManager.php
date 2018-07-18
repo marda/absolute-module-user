@@ -3,7 +3,7 @@
 namespace Absolute\Module\User\Manager;
 
 use Nette\Database\Context;
-use Absolute\Manager\BaseCRUDManager;
+use Absolute\Core\Manager\BaseCRUDManager;
 
 class UserCRUDManager extends BaseCRUDManager 
 {

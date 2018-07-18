@@ -2,7 +2,7 @@
 
 namespace Absolute\Module\User\Manager;
 
-use Absolute\Manager\BaseManager;
+use Absolute\Core\Manager\BaseManager;
 
 class UserManager extends BaseManager 
 {
