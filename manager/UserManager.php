@@ -6,19 +6,49 @@ use Nette\Database\Context;
 use Absolute\Core\Manager\BaseManager;
 use Absolute\Module\User\Entity\User;
 use Absolute\Module\User\Entity\Category;
+use Absolute\Module\Team\Manager\TeamManager;
 use Absolute\Module\File\Manager\FileManager;
 
 class UserManager extends BaseManager
 {
 
     private $fileManager;
+    private $teamManager;
 
-    public function __construct(Context $database, FileManager $fileManager)
+    public function __construct(Context $database, FileManager $fileManager, TeamManager $teamManager )
     {
         parent::__construct($database);
         $this->fileManager = $fileManager;
+        $this->teamManager = $teamManager;
     }
 
+
+    /* DB TO ENTITY */
+    protected function _getUser($db)
+    {
+        if ($db == false) {
+            return false;
+        }
+        $object = new User($db->id, $db->username, $db->role, $db->first_name, $db->last_name, $db->email, $db->phone, $db->created);
+        if ($db->ref('file')) {
+            $object->setImage($this->fileManager->_getFile($db->ref('file')));
+        }
+        foreach ($db->related('category_user') as $categoryDb) {
+            $category = $this->_getCategory($categoryDb->category);
+            if ($category) {
+                $object->addCategory($category);
+            }
+        }
+        foreach ($db->related('team_user') as $teamDb) {
+            $team = $this->teamManager->_getTeam($teamDb->team);
+            if ($team) {
+                $object->addTeam($team);
+            }
+        }
+        return $object;
+    }
+
+    /* INTERNAL/EXTERNAL INTERFACE */
     public function _getById($id)
     {
         $resultDb = $this->database->table('user')->get($id);
@@ -163,30 +193,6 @@ class UserManager extends BaseManager
             $ret[] = $object;
         }
         return $ret;
-    }
-
-    protected function _getUser($db)
-    {
-        if ($db == false) {
-            return false;
-        }
-        $object = new User($db->id, $db->username, $db->role, $db->first_name, $db->last_name, $db->email, $db->phone, $db->created);
-        if ($db->ref('file')) {
-            $object->setImage($this->fileManager->_getFile($db->ref('file')));
-        }
-        foreach ($db->related('category_user') as $categoryDb) {
-            $category = $this->_getCategory($categoryDb->category);
-            if ($category) {
-                $object->addCategory($category);
-            }
-        }
-        foreach ($db->related('team_user') as $teamDb) {
-            $team = $this->_getTeam($teamDb->team);
-            if ($team) {
-                $object->addTeam($team);
-            }
-        }
-        return $object;
     }
 
     protected function _getCategory($db)

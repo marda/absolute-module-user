@@ -144,7 +144,7 @@ class User extends BaseEntity
 
   public function addGroup($group)
   {
-    $this->groups[$group->id] = $group;
+    $this->groups[$group->getId()] = $group;
   }
 
   public function addCategory($category)
@@ -154,7 +154,7 @@ class User extends BaseEntity
 
   public function addTeam($team)
   {
-    $this->teams[$team->id] = $team;
+    $this->teams[$team->getId()] = $team;
   }
 
   // OTHER METHODS
