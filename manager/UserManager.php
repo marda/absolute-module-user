@@ -8,18 +8,21 @@ use Absolute\Module\User\Entity\User;
 use Absolute\Module\User\Entity\Category;
 use Absolute\Module\Team\Manager\TeamManager;
 use Absolute\Module\File\Manager\FileManager;
+use Absolute\Module\Category\Manager\CategoryManager;
 
 class UserManager extends BaseManager
 {
 
     private $fileManager;
     private $teamManager;
+    private $categoryManager;
 
-    public function __construct(Context $database, FileManager $fileManager, TeamManager $teamManager )
+    public function __construct(Context $database, FileManager $fileManager, TeamManager $teamManager, CategoryManager $categoryManager )
     {
         parent::__construct($database);
         $this->fileManager = $fileManager;
         $this->teamManager = $teamManager;
+        $this->categoryManager = $categoryManager;
     }
 
 
@@ -34,7 +37,7 @@ class UserManager extends BaseManager
             $object->setImage($this->fileManager->_getFile($db->ref('file')));
         }
         foreach ($db->related('category_user') as $categoryDb) {
-            $category = $this->_getCategory($categoryDb->category);
+            $category = $this->categoryManager->getCategory($categoryDb->category);
             if ($category) {
                 $object->addCategory($category);
             }
@@ -195,16 +198,51 @@ class UserManager extends BaseManager
         return $ret;
     }
 
-    protected function _getCategory($db)
+    private function _getTodoList($todoId)
     {
-        if ($db == false) {
-            return false;
+        $ret = array();
+        $resultDb = $this->database->table('user')->where(':todo_user.todo_id', $todoId);
+        foreach ($resultDb as $db)
+        {
+            $object = $this->_getUser($db);
+            $ret[] = $object;
         }
-        $object = new Category($db->id, $db->name, $db->default, $db->created);
-        if ($db->ref('file')) {
-            $object->setImage($this->fileManager->_getFile($db->ref('file')));
-        }
-        return $object;
+        return $ret;
+    }
+
+    private function _getTodoItem($todoId,$userId)
+    {
+       return $this->_getUser($this->database->table('user')->where(':todo_user.todo_id', $todoId)->where("user_id", $userId)->fetch());
+    }
+
+    public function _userTodoDelete($todoId,$userId)
+    {
+        return $this->database->table('todo_user')->where('todo_id', $todoId)->where('user_id', $userId)->delete();
+    }
+
+    public function _userTodoCreate($todoId,$userId)
+    {
+        return $this->database->table('todo_user')->insert(['todo_id' => $todoId, 'user_id' => $userId]);
+    }
+
+    public function getTodoList($todoId)
+    {
+        return $this->_getTodoList($todoId);
+    }
+
+    public function getTodoItem($todoId,$userId)
+    {
+        return $this->_getTodoItem($todoId,$userId);
+    }
+
+    public function userTodoDelete($todoId,$userId)
+    {
+        return $this->_userTodoDelete($todoId,$userId);
+    }
+
+    public function userTodoCreate($todoId,$userId)
+    {
+        return $this->_userTodoCreate($todoId,$userId);
     }
 
     /* EXTERNAL METHOD */

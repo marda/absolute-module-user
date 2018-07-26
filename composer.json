@@ -7,6 +7,7 @@
   "require": {
     "absolute.app/core": "dev-master",
     "absolute.app/auth": "dev-master",
-    "absolute.app/team": "dev-master"
+    "absolute.app/team": "dev-master",
+    "absolute.app/category": "dev-master"
   }    
 }
