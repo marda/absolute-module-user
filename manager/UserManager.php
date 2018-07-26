@@ -109,10 +109,10 @@ class UserManager extends BaseManager
         return $this->database->table('user')->select('id')->count('id');
     }
 
-    private function _getList()
+    private function _getList($offset = -1, $limit = -1)
     {
         $ret = array();
-        $resultDb = $this->database->table('user')->order('username');
+        $resultDb = $this->database->table('user')->order('username')->limit($limit,$offset);
         foreach ($resultDb as $db) {
             $object = $this->_getUser($db);
             $ret[$db->username] = $object;
@@ -272,9 +272,9 @@ class UserManager extends BaseManager
         return $this->_getCount();
     }
 
-    public function getList()
+    public function getList($offset, $limit)
     {
-        return $this->_getList();
+        return $this->_getList($offset, $limit);
     }
 
     public function getUserList($userId)
