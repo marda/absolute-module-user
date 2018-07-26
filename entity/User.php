@@ -185,7 +185,7 @@ class User extends BaseEntity
       "data" => array(
           "displayName" => $this->firstName." ".$this->lastName,
           "email" => $this->email,
-          "photoURL" => $this->image->getPath()
+          "photoURL" => ($this->image) ? $this->image->getPath() : "",
       ),
     );
   }
