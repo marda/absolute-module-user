@@ -97,12 +97,12 @@ class DefaultPresenter extends UserBasePresenter
             $ret = $this->userCRUDManager->update($id, $data);
             if (!$ret)
             {
-                $this->jsonResponse->payload = ['message' => 'no update user'];
+                $this->jsonResponse->payload = ['message' => 'No update user.'];
                 $this->httpResponse->setCode(Response::S500_INTERNAL_SERVER_ERROR);
             }
             else
             {
-                $this->jsonResponse->payload = ['message' => 'update user saved'];
+                $this->jsonResponse->payload = ['message' => 'Update user saved.'];
                 $this->httpResponse->setCode(Response::S201_CREATED);
             }
         }
@@ -124,12 +124,12 @@ class DefaultPresenter extends UserBasePresenter
 
             if (!$ret)
             {
-                $this->jsonResponse->payload = ['message' => 'error delete user'];
+                $this->jsonResponse->payload = ['message' => 'Error delete user.'];
                 $this->httpResponse->setCode(Response::S500_INTERNAL_SERVER_ERROR);
             }
             else
             {
-                $this->jsonResponse->payload = ['message' => 'delete user ok'];
+                $this->jsonResponse->payload = ['message' => 'Delete user ok.'];
                 $this->httpResponse->setCode(Response::S200_OK);
             }
         }
