@@ -6,6 +6,7 @@
   "minimum-stability": "dev",
   "require": {
     "absolute.app/core": "dev-master",
-    "absolute.app/auth": "dev-master"
+    "absolute.app/auth": "dev-master",
+    "absolute.app/team": "dev-master"
   }    
 }
