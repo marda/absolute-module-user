@@ -241,6 +241,53 @@ class UserManager extends BaseManager
         return $ret;
     }
 
+    private function _getGroupList($todoId)
+    {
+        $ret = array();
+        $resultDb = $this->database->table('user')->where(':group_user.group_id', $todoId);
+        foreach ($resultDb as $db)
+        {
+            $object = $this->_getUser($db);
+            $ret[] = $object;
+        }
+        return $ret;
+    }
+
+    private function _getGroupItem($eventId,$userId)
+    {
+       return $this->_getUser($this->database->table('user')->where(':group_user.group_id', $eventId)->where("user_id", $userId)->fetch());
+    }
+
+    public function _userGroupDelete($eventId,$userId)
+    {
+        return $this->database->table('group_user')->where('group_id', $eventId)->where('user_id', $userId)->delete();
+    }
+
+    public function _userGroupCreate($eventId,$userId)
+    {
+        return $this->database->table('group_user')->insert(['group_id' => $eventId, 'user_id' => $userId]);
+    }
+
+    public function getGroupList($eventId)
+    {
+        return $this->_getGroupList($eventId);
+    }
+
+    public function getGroupItem($eventId,$userId)
+    {
+        return $this->_getGroupItem($eventId,$userId);
+    }
+
+    public function userGroupDelete($eventId,$userId)
+    {
+        return $this->_userGroupDelete($eventId,$userId);
+    }
+
+    public function userGroupCreate($eventId,$userId)
+    {
+        return $this->_userGroupCreate($eventId,$userId);
+    }
+
     private function _getEventItem($eventId,$userId)
     {
        return $this->_getUser($this->database->table('user')->where(':event_user.event_id', $eventId)->where("user_id", $userId)->fetch());
