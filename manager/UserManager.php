@@ -50,6 +50,10 @@ class UserManager extends BaseManager
         }
         return $object;
     }
+    public function getUser($db)
+    {
+        return $this->_getUser($db);
+    }
 
     /* INTERNAL/EXTERNAL INTERFACE */
     public function _getById($id)
@@ -223,6 +227,53 @@ class UserManager extends BaseManager
     public function _userTodoCreate($todoId,$userId)
     {
         return $this->database->table('todo_user')->insert(['todo_id' => $todoId, 'user_id' => $userId]);
+    }
+
+    private function _getEventList($todoId)
+    {
+        $ret = array();
+        $resultDb = $this->database->table('user')->where(':event_user.event_id', $todoId);
+        foreach ($resultDb as $db)
+        {
+            $object = $this->_getUser($db);
+            $ret[] = $object;
+        }
+        return $ret;
+    }
+
+    private function _getEventItem($eventId,$userId)
+    {
+       return $this->_getUser($this->database->table('user')->where(':event_user.event_id', $eventId)->where("user_id", $userId)->fetch());
+    }
+
+    public function _userEventDelete($eventId,$userId)
+    {
+        return $this->database->table('event_user')->where('event_id', $eventId)->where('user_id', $userId)->delete();
+    }
+
+    public function _userEventCreate($eventId,$userId)
+    {
+        return $this->database->table('event_user')->insert(['event_id' => $eventId, 'user_id' => $userId]);
+    }
+
+    public function getEventList($eventId)
+    {
+        return $this->_getEventList($eventId);
+    }
+
+    public function getEventItem($eventId,$userId)
+    {
+        return $this->_getEventItem($eventId,$userId);
+    }
+
+    public function userEventDelete($eventId,$userId)
+    {
+        return $this->_userEventDelete($eventId,$userId);
+    }
+
+    public function userEventCreate($eventId,$userId)
+    {
+        return $this->_userEventCreate($eventId,$userId);
     }
 
     public function getTodoList($todoId)
