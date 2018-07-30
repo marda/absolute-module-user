@@ -288,6 +288,54 @@ class UserManager extends BaseManager
         return $this->_userGroupCreate($eventId,$userId);
     }
 
+
+    private function _getMenuList($todoId)
+    {
+        $ret = array();
+        $resultDb = $this->database->table('user')->where(':menu_user.menu_id', $todoId);
+        foreach ($resultDb as $db)
+        {
+            $object = $this->_getUser($db);
+            $ret[] = $object;
+        }
+        return $ret;
+    }
+
+    private function _getMenuItem($menuId,$userId)
+    {
+       return $this->_getUser($this->database->table('user')->where(':menu_user.menu_id', $menuId)->where("user_id", $userId)->fetch());
+    }
+
+    public function _userMenuDelete($menuId,$userId)
+    {
+        return $this->database->table('menu_user')->where('menu_id', $menuId)->where('user_id', $userId)->delete();
+    }
+
+    public function _userMenuCreate($menuId,$userId)
+    {
+        return $this->database->table('menu_user')->insert(['menu_id' => $menuId, 'user_id' => $userId]);
+    }
+
+    public function getMenuList($menuId)
+    {
+        return $this->_getMenuList($menuId);
+    }
+
+    public function getMenuItem($menuId,$userId)
+    {
+        return $this->_getMenuItem($menuId,$userId);
+    }
+
+    public function userMenuDelete($menuId,$userId)
+    {
+        return $this->_userMenuDelete($menuId,$userId);
+    }
+
+    public function userMenuCreate($menuId,$userId)
+    {
+        return $this->_userMenuCreate($menuId,$userId);
+    }
+    
     private function _getEventItem($eventId,$userId)
     {
        return $this->_getUser($this->database->table('user')->where(':event_user.event_id', $eventId)->where("user_id", $userId)->fetch());
