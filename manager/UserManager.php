@@ -268,24 +268,28 @@ class UserManager extends BaseManager
         return $this->database->table('group_user')->insert(['group_id' => $eventId, 'user_id' => $userId]);
     }
 
-    public function getGroupList($eventId)
+    private function _getProjectItem($projectId,$userId)
     {
-        return $this->_getGroupList($eventId);
+       return $this->_getUser($this->database->table('user')->where(':project_user.project_id', $projectId)->where("user_id", $userId)->fetch());
     }
 
-    public function getGroupItem($eventId,$userId)
+    public function _userProjectDelete($projectId,$userId)
     {
-        return $this->_getGroupItem($eventId,$userId);
+        return $this->database->table('project_user')->where('project_id', $projectId)->where('user_id', $userId)->delete();
     }
-
-    public function userGroupDelete($eventId,$userId)
-    {
-        return $this->_userGroupDelete($eventId,$userId);
+    
+    public function _userProjectUpdate($projectId,$userId,$post){
+        unset($post['id']);
+        return $this->database->table('project_user')->where('project_id', $projectId)->where('user_id', $userId)->update($post);
     }
-
-    public function userGroupCreate($eventId,$userId)
+    
+    public function _userProjectCreate($projectId,$userId,$role,$starred)
     {
-        return $this->_userGroupCreate($eventId,$userId);
+        return $this->database->table('project_user')->insert([
+            'project_id' => $projectId, 
+            'user_id' => $userId, 
+            'role' => $role, 
+            'starred' => $starred]);
     }
 
     private function _getMenuList($todoId)
@@ -315,26 +319,6 @@ class UserManager extends BaseManager
         return $this->database->table('menu_user')->insert(['menu_id' => $menuId, 'user_id' => $userId]);
     }
 
-    public function getMenuList($menuId)
-    {
-        return $this->_getMenuList($menuId);
-    }
-
-    public function getMenuItem($menuId,$userId)
-    {
-        return $this->_getMenuItem($menuId,$userId);
-    }
-
-    public function userMenuDelete($menuId,$userId)
-    {
-        return $this->_userMenuDelete($menuId,$userId);
-    }
-
-    public function userMenuCreate($menuId,$userId)
-    {
-        return $this->_userMenuCreate($menuId,$userId);
-    }
-
     private function _getPageList($todoId)
     {
         $ret = array();
@@ -360,26 +344,6 @@ class UserManager extends BaseManager
     public function _userPageCreate($pageId,$userId)
     {
         return $this->database->table('page_user')->insert(['page_id' => $pageId, 'user_id' => $userId]);
-    }
-
-    public function getPageList($pageId)
-    {
-        return $this->_getPageList($pageId);
-    }
-
-    public function getPageItem($pageId,$userId)
-    {
-        return $this->_getPageItem($pageId,$userId);
-    }
-
-    public function userPageDelete($pageId,$userId)
-    {
-        return $this->_userPageDelete($pageId,$userId);
-    }
-
-    public function userPageCreate($pageId,$userId)
-    {
-        return $this->_userPageCreate($pageId,$userId);
     }
     
     private function _getEventItem($eventId,$userId)
@@ -487,6 +451,86 @@ class UserManager extends BaseManager
     public function getSearch($search)
     {
         return $this->_getSearch($search);
+    }
+
+    public function getProjectItem($projectId,$userId)
+    {
+        return $this->_getProjectItem($projectId,$userId);
+    }
+
+    public function userProjectDelete($projectId,$userId)
+    {
+        return $this->_userProjectDelete($projectId,$userId);
+    }
+
+    public function userProjectCreate($projectId,$userId,$role,$starred)
+    {
+        return $this->_userProjectCreate($projectId,$userId,$role,$starred);
+    }
+
+    public function userProjectUpdate($projectId,$userId,$post)
+    {
+        return $this->_userProjectUpdate($projectId,$userId,$post);
+    }
+
+    public function getPageList($pageId)
+    {
+        return $this->_getPageList($pageId);
+    }
+
+    public function getPageItem($pageId,$userId)
+    {
+        return $this->_getPageItem($pageId,$userId);
+    }
+
+    public function userPageDelete($pageId,$userId)
+    {
+        return $this->_userPageDelete($pageId,$userId);
+    }
+
+    public function userPageCreate($pageId,$userId)
+    {
+        return $this->_userPageCreate($pageId,$userId);
+    }
+
+    public function getMenuList($menuId)
+    {
+        return $this->_getMenuList($menuId);
+    }
+
+    public function getMenuItem($menuId,$userId)
+    {
+        return $this->_getMenuItem($menuId,$userId);
+    }
+
+    public function userMenuDelete($menuId,$userId)
+    {
+        return $this->_userMenuDelete($menuId,$userId);
+    }
+
+    public function userMenuCreate($menuId,$userId)
+    {
+        return $this->_userMenuCreate($menuId,$userId);
+    }
+
+    public function getGroupList($eventId)
+    {
+        return $this->_getGroupList($eventId);
+    }
+
+    public function getGroupItem($eventId,$userId)
+    {
+        return $this->_getGroupItem($eventId,$userId);
+    }
+
+    public function userGroupDelete($eventId,$userId)
+    {
+        return $this->_userGroupDelete($eventId,$userId);
+    }
+
+    public function userGroupCreate($eventId,$userId)
+    {
+        return $this->_userGroupCreate($eventId,$userId);
     }
 
 }
