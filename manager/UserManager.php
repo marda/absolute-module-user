@@ -288,7 +288,6 @@ class UserManager extends BaseManager
         return $this->_userGroupCreate($eventId,$userId);
     }
 
-
     private function _getMenuList($todoId)
     {
         $ret = array();
@@ -334,6 +333,53 @@ class UserManager extends BaseManager
     public function userMenuCreate($menuId,$userId)
     {
         return $this->_userMenuCreate($menuId,$userId);
+    }
+
+    private function _getPageList($todoId)
+    {
+        $ret = array();
+        $resultDb = $this->database->table('user')->where(':page_user.page_id', $todoId);
+        foreach ($resultDb as $db)
+        {
+            $object = $this->_getUser($db);
+            $ret[] = $object;
+        }
+        return $ret;
+    }
+
+    private function _getPageItem($pageId,$userId)
+    {
+       return $this->_getUser($this->database->table('user')->where(':page_user.page_id', $pageId)->where("user_id", $userId)->fetch());
+    }
+
+    public function _userPageDelete($pageId,$userId)
+    {
+        return $this->database->table('page_user')->where('page_id', $pageId)->where('user_id', $userId)->delete();
+    }
+
+    public function _userPageCreate($pageId,$userId)
+    {
+        return $this->database->table('page_user')->insert(['page_id' => $pageId, 'user_id' => $userId]);
+    }
+
+    public function getPageList($pageId)
+    {
+        return $this->_getPageList($pageId);
+    }
+
+    public function getPageItem($pageId,$userId)
+    {
+        return $this->_getPageItem($pageId,$userId);
+    }
+
+    public function userPageDelete($pageId,$userId)
+    {
+        return $this->_userPageDelete($pageId,$userId);
+    }
+
+    public function userPageCreate($pageId,$userId)
+    {
+        return $this->_userPageCreate($pageId,$userId);
     }
     
     private function _getEventItem($eventId,$userId)
