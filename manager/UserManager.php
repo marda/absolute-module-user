@@ -361,6 +361,36 @@ class UserManager extends BaseManager
         return $this->database->table('event_user')->insert(['event_id' => $eventId, 'user_id' => $userId]);
     }
 
+    private function _getTeamItem($teamId,$userId)
+    {
+       return $this->_getUser($this->database->table('user')->where(':team_user.team_id', $teamId)->where("user_id", $userId)->fetch());
+    }
+
+    public function _userTeamDelete($teamId,$userId)
+    {
+        return $this->database->table('team_user')->where('team_id', $teamId)->where('user_id', $userId)->delete();
+    }
+
+    public function _userTeamCreate($teamId,$userId)
+    {
+        return $this->database->table('team_user')->insert(['team_id' => $teamId, 'user_id' => $userId]);
+    }
+
+    public function getTeamItem($teamId,$userId)
+    {
+        return $this->_getTeamItem($teamId,$userId);
+    }
+
+    public function userTeamDelete($teamId,$userId)
+    {
+        return $this->_userTeamDelete($teamId,$userId);
+    }
+
+    public function userTeamCreate($teamId,$userId)
+    {
+        return $this->_userTeamCreate($teamId,$userId);
+    }
+
     public function getEventList($eventId)
     {
         return $this->_getEventList($eventId);
