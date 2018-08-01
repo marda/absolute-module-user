@@ -376,6 +376,53 @@ class UserManager extends BaseManager
         return $this->database->table('team_user')->insert(['team_id' => $teamId, 'user_id' => $userId]);
     }
 
+    private function _getCategoryList($categoryId)
+    {
+        $ret = array();
+        $resultDb = $this->database->table('user')->where(':category_user.category_id', $categoryId);
+        foreach ($resultDb as $db)
+        {
+            $object = $this->_getUser($db);
+            $ret[] = $object;
+        }
+        return $ret;
+    }
+
+    private function _getCategoryItem($categoryId,$userId)
+    {
+       return $this->_getUser($this->database->table('user')->where(':category_user.category_id', $categoryId)->where("user_id", $userId)->fetch());
+    }
+
+    public function _userCategoryDelete($categoryId,$userId)
+    {
+        return $this->database->table('category_user')->where('category_id', $categoryId)->where('user_id', $userId)->delete();
+    }
+
+    public function _userCategoryCreate($categoryId,$userId)
+    {
+        return $this->database->table('category_user')->insert(['category_id' => $categoryId, 'user_id' => $userId]);
+    }
+
+    public function getCategoryList($categoryId)
+    {
+        return $this->_getCategoryList($categoryId);
+    }
+
+    public function getCategoryItem($categoryId,$userId)
+    {
+        return $this->_getCategoryItem($categoryId,$userId);
+    }
+
+    public function userCategoryDelete($categoryId,$userId)
+    {
+        return $this->_userCategoryDelete($categoryId,$userId);
+    }
+
+    public function userCategoryCreate($categoryId,$userId)
+    {
+        return $this->_userCategoryCreate($categoryId,$userId);
+    }
+
     public function getTeamItem($teamId,$userId)
     {
         return $this->_getTeamItem($teamId,$userId);
